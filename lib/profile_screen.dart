@@ -95,13 +95,6 @@ class ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Todo"),
-          actions: <Widget>[
-            new IconButton(
-              icon: new Icon(Icons.add),
-              color: Colors.white,
-              // onPressed: _addTodoItem,
-            )
-          ],
         ),
         body: Form(
           key: fkey,

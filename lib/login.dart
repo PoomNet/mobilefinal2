@@ -27,16 +27,43 @@ class Loginstate extends State<Loginpage> {
   Future loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      username = prefs.getString('username') ?? '';
-      name = prefs.getString('name') ?? '';
+      this.username = prefs.getString('username') ?? '';
+      this.name = prefs.getString('name') ?? '';
     });
+  }
+
+  Future haslog() async {
+    await loadData();
+    if (this.username != "") {
+      _dataAccess.open();
+      int check = 0, i = 0;
+      alluser = _dataAccess.getAllUser();
+
+      var user = await alluser;
+      for (i = 0; i < user.length; i++) {
+        print(user[i].user);
+        if (user[i].user == username) {
+          check += 1;
+          break;
+        }
+      }
+      CurrentUser.USERID = user[i].id;
+      CurrentUser.USER = user[i].user;
+      CurrentUser.NAME = user[i].name;
+      CurrentUser.AGE = user[i].age;
+      CurrentUser.PASSWORD = user[i].pass;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TodoListScreen(storage: CounterStorage())));
+    }
   }
 
   @override
   initState() {
     super.initState();
     // Add listeners to this class
-    loadData();
+    haslog();
     print(username);
     if (CurrentUser.USER != null) {
       Navigator.push(
@@ -61,7 +88,8 @@ class Loginstate extends State<Loginpage> {
                   padding: const EdgeInsets.all(10.0),
                   child: TextFormField(
                     decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.account_box), hintText: 'User ID'),
+                        prefixIcon: Icon(Icons.account_box),
+                        hintText: 'User ID'),
                     controller: userController,
                     validator: (value) {},
                     keyboardType: TextInputType.text,
@@ -139,7 +167,8 @@ class Loginstate extends State<Loginpage> {
                     alignment: Alignment.bottomRight,
                     child: FlatButton(
                         child: Text(
-                          "Register New Account",),
+                          "Register New Account",
+                        ),
                         onPressed: () {
                           Navigator.push(
                               context,
