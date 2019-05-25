@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'json.dart';
 import 'login.dart';
 import 'profile_screen.dart';
-import 'profile.dart';
 import 'register.dart';
 import 'sqlprofile.dart';
 import 'dart:async';
@@ -60,7 +59,7 @@ class TodoListScreen extends StatefulWidget {
 }
 
 class _TodoListScreenState extends State<TodoListScreen> {
-  var username = "";
+  var id;
   var name = "";
   var _counter = "";
   Future<List<ProfileItem>> _todoItems;
@@ -95,7 +94,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
   Future loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      username = prefs.getString('username') ?? '';
+      id = prefs.getInt('username') ?? '';
       name = prefs.getString('name') ?? '';
     });
   }
@@ -161,11 +160,6 @@ class _TodoListScreenState extends State<TodoListScreen> {
                         onPressed: () async {
                           SharedPreferences prefs =
                             await SharedPreferences.getInstance();
-                          CurrentUser.USERID = "";
-                          CurrentUser.USER = "";
-                          CurrentUser.NAME = "";
-                          CurrentUser.AGE = "";
-                          CurrentUser.PASSWORD = "";
                           prefs.setString('username', "");
                           prefs.setString('name', "");
                           Navigator.pop(context);

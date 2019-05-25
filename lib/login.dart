@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'profile.dart';
 import 'sqlprofile.dart';
 import 'register.dart';
 import 'home.dart';
@@ -20,21 +19,20 @@ class Loginstate extends State<Loginpage> {
   Future<List<ProfileItem>> alluser;
   final GlobalKey<ScaffoldState> _scafkey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  CurrentUser currentUser;
-  var username = "";
+  var id;
   var name = "";
 
   Future loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      this.username = prefs.getString('username') ?? '';
-      this.name = prefs.getString('name') ?? '';
+      id = prefs.getInt('username') ?? '';
+      name = prefs.getString('name') ?? '';
     });
   }
 
   Future haslog() async {
     await loadData();
-    if (this.username != "") {
+    if (id != "") {
       _dataAccess.open();
       int check = 0, i = 0;
       alluser = _dataAccess.getAllUser();
@@ -42,16 +40,11 @@ class Loginstate extends State<Loginpage> {
       var user = await alluser;
       for (i = 0; i < user.length; i++) {
         print(user[i].user);
-        if (user[i].user == username) {
+        if (user[i].id == id) {
           check += 1;
           break;
         }
       }
-      CurrentUser.USERID = user[i].id;
-      CurrentUser.USER = user[i].user;
-      CurrentUser.NAME = user[i].name;
-      CurrentUser.AGE = user[i].age;
-      CurrentUser.PASSWORD = user[i].pass;
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -64,12 +57,6 @@ class Loginstate extends State<Loginpage> {
     super.initState();
     // Add listeners to this class
     haslog();
-    print(username);
-    if (CurrentUser.USER != null) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => TodoListScreen()));
-    }
-    print(CurrentUser.USER);
   }
 
   @override
@@ -146,15 +133,10 @@ class Loginstate extends State<Loginpage> {
                           ));
                         } else {
                           // final myString = prefs.getString('my_string_key') ?? '';
-                          prefs.setString('username', user[i].user);
+                          prefs.setInt('username', user[i].id);
                           prefs.setString('name', user[i].name);
                           userController.text = "";
                           passController.text = "";
-                          CurrentUser.USERID = user[i].id;
-                          CurrentUser.USER = user[i].user;
-                          CurrentUser.NAME = user[i].name;
-                          CurrentUser.AGE = user[i].age;
-                          CurrentUser.PASSWORD = user[i].pass;
                           Navigator.push(
                               context,
                               MaterialPageRoute(

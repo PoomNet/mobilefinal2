@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
-import 'profile.dart';
 import 'register.dart';
 import 'sqlprofile.dart';
 import 'dart:async';
@@ -221,15 +220,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             ProfileItem update = ProfileItem();
-                            update.id = CurrentUser.USERID;
-                            CurrentUser.USER =
-                                update.user = userController.text;
-                            CurrentUser.NAME =
-                                update.name = nameController.text;
-                            CurrentUser.AGE = update.age = ageController.text;
-                            CurrentUser.PASSWORD =
-                                update.pass = passController.text;
-                            prefs.setString('username', userController.text);
+                            update.id = prefs.getInt('username') ?? '';
+                            update.user = userController.text;
+                            update.name = nameController.text;
+                            update.age = ageController.text;
+                            update.pass = passController.text;
                             prefs.setString('name', nameController.text);
                             _incrementCounter(quoteController.text);
                             await dataAccess.update(update);
